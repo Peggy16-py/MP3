@@ -3,7 +3,7 @@ const express  = require('express');
 const router   = express.Router();
 const mongoose = require('mongoose');
 const Task     = require('../models/Task');
-const User     = require('../models/User');
+const User     = require('../models/user');
 
 function parseJSON(q) {
   if (q === undefined) return undefined;
