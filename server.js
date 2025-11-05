@@ -26,7 +26,7 @@ app.use(allowCrossDomain);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// (可选) 简单健康检查，便于自测
+// Optional health check endpoint for testing
 app.get('/api/health', (req, res) => {
   res.status(200).json({ message: 'OK', data: { uptime: process.uptime() } });
 });
@@ -44,7 +44,7 @@ require('./routes')(app, router);
       process.exit(1);
     }
 
-    // 使用环境变量中的连接串
+    // Use connection string from environment variable
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -57,6 +57,6 @@ require('./routes')(app, router);
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     console.error('Error details:', err);
-    process.exit(1); // 连接失败就退出，避免误以为服务正常
+    process.exit(1); // Exit on connection failure to prevent service from appearing healthy
   }
 })();
