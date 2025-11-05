@@ -37,8 +37,18 @@ require('./routes')(app, router);
 // ---- IMPORTANT: connect to MongoDB BEFORE listening ----
 (async () => {
   try {
-    // 使用 .env 里的 SRV 连接串，例如 mongodb+srv://...
-    await mongoose.connect(process.env.MONGODB_URI);
+    // Check if MONGODB_URI is set
+    if (!process.env.MONGODB_URI) {
+      console.error('❌ MONGODB_URI environment variable is not set!');
+      console.error('Please set MONGODB_URI in Render Environment Variables');
+      process.exit(1);
+    }
+
+    // 使用环境变量中的连接串
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     console.log('✅ Connected to MongoDB Atlas');
 
     app.listen(port, () => {
@@ -46,6 +56,7 @@ require('./routes')(app, router);
     });
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
+    console.error('Error details:', err);
     process.exit(1); // 连接失败就退出，避免误以为服务正常
   }
 })();
